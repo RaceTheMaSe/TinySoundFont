@@ -545,7 +545,7 @@ static void tsf_region_operator(struct tsf_region* region, tsf_u16 genOper, unio
 		GEN_FLOAT_MAX1000    = 0xB0, //min 0, max 1000
 		GEN_FLOAT_MAX1440    = 0xC0, //min 0, max 1440
 
-		_GEN_MAX = 59
+		GEN_MAX = 59
 	};
 	#define TSFREGIONOFFSET(TYPE, FIELD) (unsigned char)(((TYPE*)&((struct tsf_region*)TSF_NULL)->FIELD) - (TYPE*)TSF_NULL)
 	#define TSFREGIONENVOFFSET(TYPE, ENV, FIELD) (unsigned char)(((TYPE*)&((&(((struct tsf_region*)TSF_NULL)->ENV))->FIELD)) - (TYPE*)TSF_NULL)
@@ -565,13 +565,13 @@ static void tsf_region_operator(struct tsf_region* region, tsf_u16 genOper, unio
 		{ GEN_INT   | GEN_INT_LIMIT12K     , TSFREGIONOFFSET(         int, modEnvToFilterFc     ) }, //11 ModEnvToFilterFc
 		{ GEN_UINT_ADD15                   , TSFREGIONOFFSET(unsigned int, end                  ) }, //12 EndAddrsCoarseOffset
 		{ GEN_INT   | GEN_INT_LIMIT960     , TSFREGIONOFFSET(         int, modLfoToVolume       ) }, //13 ModLfoToVolume
-		{ 0                                , (0                                                  ) }, //   Unused
-		{ 0                                , (0                                                  ) }, //15 ChorusEffectsSend (unsupported)
-		{ 0                                , (0                                                  ) }, //16 ReverbEffectsSend (unsupported)
+		{ 0                                , (0                                                 ) }, //   Unused
+		{ 0                                , (0                                                 ) }, //15 ChorusEffectsSend (unsupported)
+		{ 0                                , (0                                                 ) }, //16 ReverbEffectsSend (unsupported)
 		{ GEN_FLOAT | GEN_FLOAT_LIMITPAN   , TSFREGIONOFFSET(       float, pan                  ) }, //17 Pan
-		{ 0                                , (0                                                  ) }, //   Unused
-		{ 0                                , (0                                                  ) }, //   Unused
-		{ 0                                , (0                                                  ) }, //   Unused
+		{ 0                                , (0                                                 ) }, //   Unused
+		{ 0                                , (0                                                 ) }, //   Unused
+		{ 0                                , (0                                                 ) }, //   Unused
 		{ GEN_FLOAT | GEN_FLOAT_LIMIT12K5K , TSFREGIONOFFSET(       float, delayModLFO          ) }, //21 DelayModLFO
 		{ GEN_INT   | GEN_INT_LIMIT16K4500 , TSFREGIONOFFSET(         int, freqModLFO           ) }, //22 FreqModLFO
 		{ GEN_FLOAT | GEN_FLOAT_LIMIT12K5K , TSFREGIONOFFSET(       float, delayVibLFO          ) }, //23 DelayVibLFO
@@ -592,21 +592,21 @@ static void tsf_region_operator(struct tsf_region* region, tsf_u16 genOper, unio
 		{ GEN_FLOAT | GEN_FLOAT_LIMIT12K8K , TSFREGIONENVOFFSET(    float, ampenv, release      ) }, //38 ReleaseVolEnv
 		{ GEN_FLOAT | GEN_FLOAT_LIMIT1200  , TSFREGIONENVOFFSET(    float, ampenv, keynumToHold ) }, //39 KeynumToVolEnvHold
 		{ GEN_FLOAT | GEN_FLOAT_LIMIT1200  , TSFREGIONENVOFFSET(    float, ampenv, keynumToDecay) }, //40 KeynumToVolEnvDecay
-		{ 0                                , (0                                                  ) }, //   Instrument (special)
-		{ 0                                , (0                                                  ) }, //   Reserved
-		{ GEN_KEYRANGE                     , (0                                                  ) }, //43 KeyRange
-		{ GEN_VELRANGE                     , (0                                                  ) }, //44 VelRange
+		{ 0                                , (0                                                 ) }, //   Instrument (special)
+		{ 0                                , (0                                                 ) }, //   Reserved
+		{ GEN_KEYRANGE                     , (0                                                 ) }, //43 KeyRange
+		{ GEN_VELRANGE                     , (0                                                 ) }, //44 VelRange
 		{ GEN_UINT_ADD15                   , TSFREGIONOFFSET(unsigned int, loop_start           ) }, //45 StartloopAddrsCoarseOffset
-		{ 0                                , (0                                                  ) }, //46 Keynum (special)
-		{ 0                                , (0                                                  ) }, //47 Velocity (special)
+		{ 0                                , (0                                                 ) }, //46 Keynum (special)
+		{ 0                                , (0                                                 ) }, //47 Velocity (special)
 		{ GEN_FLOAT | GEN_FLOAT_LIMITATTN  , TSFREGIONOFFSET(       float, attenuation          ) }, //48 InitialAttenuation
-		{ 0                                , (0                                                  ) }, //   Reserved
+		{ 0                                , (0                                                 ) }, //   Reserved
 		{ GEN_UINT_ADD15                   , TSFREGIONOFFSET(unsigned int, loop_end             ) }, //50 EndloopAddrsCoarseOffset
 		{ GEN_INT                          , TSFREGIONOFFSET(         int, transpose            ) }, //51 CoarseTune
 		{ GEN_INT                          , TSFREGIONOFFSET(         int, tune                 ) }, //52 FineTune
-		{ 0                                , (0                                                  ) }, //   SampleID (special)
+		{ 0                                , (0                                                 ) }, //   SampleID (special)
 		{ GEN_LOOPMODE                     , TSFREGIONOFFSET(         int, loop_mode            ) }, //54 SampleModes
-		{ 0                                , (0                                                  ) }, //   Reserved
+		{ 0                                , (0                                                 ) }, //   Reserved
 		{ GEN_INT                          , TSFREGIONOFFSET(         int, pitch_keytrack       ) }, //56 ScaleTuning
 		{ GEN_GROUP                        , TSFREGIONOFFSET(unsigned int, group                ) }, //57 ExclusiveClass
 		{ GEN_KEYCENTER                    , TSFREGIONOFFSET(         int, pitch_keycenter      ) }, //58 OverridingRootKey
@@ -984,6 +984,7 @@ static int tsf_load_samples(void** pRawBuffer, float** pFloatBuffer, unsigned in
 	*pSmplCount = resNum;
 	return (*pFloatBuffer ? 1 : 0);
 	#else
+	(void)pRawBuffer;
 	// Inline convert the samples from short to float
 	float *res, *out; const short *in;
 	*pSmplCount = chunkSmpl->size / (unsigned int)sizeof(short);
